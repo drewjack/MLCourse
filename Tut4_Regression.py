@@ -23,13 +23,15 @@ forecast_col = 'Adj. Close'
 df.fillna(-9999, inplace=True)
 #Used to predict out the data 1% of the current data
 forecast_out = int(math.ceil(0.01*len(df)))
+#Shows how many days in advance its predicting
+print(forecast_out)
 
 #Essentially shifts the columns negeatively --> spreadsheet shifted up so each labeled column is the adjusted close price 1% of days into future
 df['label'] = df[forecast_col].shift(-forecast_out)
 df.dropna(inplace=True)
 
 #Features
-X = np.array(df.drop(['label'], 1))
+X = np.array(df.drop(['label'], 1 ))
 #Response
 y = np.array(['label'])
 
@@ -41,9 +43,10 @@ y = np.array(df['label'])
 X_train, X_test, y_train, y_test = model_selection.train_test_split(
     X, y, test_size=0.2)
 
+#Can replace this next line with the intended test
+# e.g. of above: clf = svm.SVR() or clf = svm.SVR(kernal="Poly")
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
 accuracy = clf.score(X_test, y_test)
-
 
 print(accuracy)
